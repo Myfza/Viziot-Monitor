@@ -1,5 +1,5 @@
 import React from 'react'
-import { Github, Globe, Linkedin, Twitter, Mail, Heart } from 'lucide-react'
+import { Github, Globe, Linkedin, Twitter, Mail ,Instagram } from 'lucide-react'
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear()
@@ -7,31 +7,31 @@ export const Footer: React.FC = () => {
   const socialLinks = [
     {
       name: 'GitHub',
-      url: 'https://github.com/yourusername',
+      url: 'https://github.com/myfza',
       icon: Github,
       color: 'hover:text-orange-400'
     },
     {
       name: 'Portfolio',
-      url: 'https://yourportfolio.com',
+      url: 'http://vizdev.netlify.app/',
       icon: Globe,
       color: 'hover:text-orange-400'
     },
     {
       name: 'LinkedIn',
-      url: 'https://linkedin.com/in/yourprofile',
+      url: 'https://linkedin.com/in/myfza',
       icon: Linkedin,
       color: 'hover:text-blue-400'
     },
     {
-      name: 'Twitter',
-      url: 'https://twitter.com/yourusername',
+      name: 'Instagram',
+      url: 'https://instagram.com/vizart.in',
       icon: Twitter,
       color: 'hover:text-sky-400'
     },
     {
       name: 'Email',
-      url: 'mailto:your.email@example.com',
+      url: 'mailto:Vizart@gmail.com',
       icon: Mail,
       color: 'hover:text-green-400'
     }
@@ -127,9 +127,8 @@ export const Footer: React.FC = () => {
               © {currentYear} IoT Controller. All rights reserved.
             </p>
             <div className="flex items-center space-x-1 text-gray-400 text-sm">
-              <span>Made with</span>
-              <Heart className="w-4 h-4 text-red-400 fill-current" />
-              <span>for the IoT community</span>
+              <span>Made by</span>
+              <span>Muhammad Yusuf Aditiya</span>
             </div>
           </div>
         </div>
