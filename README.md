@@ -1,53 +1,136 @@
-# VizioT Monitor – Smart IoT Monitoring Platform
+# IoT Device Control Dashboard
 
-Monitor, analyze, and control your IoT devices with **real-time data visualization**, intelligent alerts, and full remote access — from anywhere in the world.
+A futuristic web interface for controlling IoT devices in real-time using React, Supabase, and TailwindCSS.
 
----
+## Features
 
-##  Overview
+- 🚀 **Real-time Control**: Control devices instantly with WebSocket connections
+- 🎨 **Futuristic UI**: Dark mode with neon accents and smooth animations
+- 📱 **Responsive Design**: Optimized for mobile and desktop
+- 🔐 **Secure Authentication**: User authentication with Supabase Auth
+- ⚡ **Live Updates**: Real-time status updates for all devices
+- 🏠 **Multi-device Support**: Control multiple IoT devices from one dashboard
 
-**IoT Monitor** is a full-stack web application built to simplify how you manage and understand your smart devices. Whether you're tracking temperature or monitoring air quality, IoT Monitor gives you instant insights with a beautiful dashboard and seamless device integration.
+## Tech Stack
 
----
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: TailwindCSS
+- **Backend**: Supabase (Database + Auth + Real-time)
+- **Icons**: Lucide React
+- **Notifications**: React Hot Toast
 
-##  Features
+## Getting Started
+
+1. **Setup Supabase Project**
+   - Create a new project at [supabase.com](https://supabase.com)
+   - Get your project URL and anon key
+   - Update the `.env` file with your credentials
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the Application**
+   ```bash
+   npm run dev
+   ```
+
+4. **Database Setup**
+   - The migration file will create the necessary tables
+   - Run the migration in your Supabase dashboard
+
+## ESP32 Integration
+
+To connect your ESP32 devices, you can use this example Arduino code:
+
+```cpp
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
+
+const char* ssid = "your-wifi-ssid";
+const char* password = "your-wifi-password";
+const char* supabaseUrl = "your-supabase-url";
+const char* apiKey = "your-supabase-anon-key";
+
+const int ledPin = 2; // GPIO pin for LED
+String deviceId = "your-device-id";
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(ledPin, OUTPUT);
   
--  Dynamic charts and data tables per device  
--  Device control panel (ON/OFF, toggle)  
--  Historical sensor data with charting  
--  Smart alerts (based on threshold/rules)  
--  Global access (mobile and desktop)  
--  Secure login with Supabase Auth  
--  Dark mode UI (optional)  
+  // Connect to WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
+}
 
----
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin(supabaseUrl + "/rest/v1/devices?id=eq." + deviceId);
+    http.addHeader("apikey", apiKey);
+    http.addHeader("Authorization", "Bearer " + String(apiKey));
+    
+    int httpResponseCode = http.GET();
+    
+    if (httpResponseCode > 0) {
+      String response = http.getString();
+      
+      // Parse JSON response
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, response);
+      
+      if (doc.size() > 0) {
+        bool status = doc[0]["status"];
+        digitalWrite(ledPin, status ? HIGH : LOW);
+        Serial.println("Device status: " + String(status ? "ON" : "OFF"));
+      }
+    }
+    
+    http.end();
+  }
+  
+  delay(1000); // Check status every second
+}
+```
 
-##  Supported Sensor Types
+## Device Types Supported
 
--  **Temperature**
--  **Humidity**
--  **Pressure**
--  **Light Intensity**
--  **Air Quality** (e.g., CO₂, PM2.5, VOC)
+- **LED**: Light controls
+- **Motor**: Fans, pumps, motors
+- **Relay**: General switching
+- **Camera**: Surveillance cameras
+- **Sensor**: Temperature, humidity, etc.
 
----
+## API Endpoints
 
-## 🔧 Getting Started
+The dashboard uses Supabase's built-in REST API:
 
-### 1. Clone the Repository
+- `GET /devices` - Fetch all user devices
+- `POST /devices` - Add new device
+- `PATCH /devices` - Update device status
+- `DELETE /devices` - Remove device
 
-```bash
-git clone https://github.com/yourusername/iot-monitor.git
-cd iot-monitor
+## Real-time Features
 
-npm install
-# or
-yarn install
+- Live device status updates
+- Instant toggle response
+- Connection status monitoring
+- Multi-user support with row-level security
 
-VITE_SUPABASE_URL=https://yourproject.supabase.co
-VITE_SUPABASE_KEY=your-supabase-anon-key
-VITE_MQTT_BROKER_URL=wss://broker.hivemq.com:8884/mqtt
-VITE_APP_NAME=IoT Monitor
+## Contributing
 
-npm run dev
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
+## License
+
+MIT License - see LICENSE file for details
